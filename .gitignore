@@ -1,2 +1,4 @@
 /__pycache__/
 /tokens.py
+/db.sqlite
+/.gitattributes

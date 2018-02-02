@@ -1,9 +1,10 @@
+import sys
 import vk_requests as vk
 from time import time, sleep
 from datetime import datetime
+from config import api_version, posts_count
 
-
-API_VERSION = '5.71'
+from tokens import service_token
 
 
 class WallPost():
@@ -14,49 +15,56 @@ class WallPost():
         self.likes = likes
         self.reposts = reposts
         self.views = views
+        if views > 0 and likes > 0:
+            self.rating = (likes / views + reposts / likes) * 100
+        else:
+            self.rating = -1
         
         
     def combine(self):
-        return self.id, self.date, self.likes, self.reposts, self.views
+        return self.id, self.date, self.likes, self.reposts, self.views, self.rating
         
 
 class WallDownloader():
 
-    def __init__(self, service_token, domain):
-        self._api = vk.create_api(service_token=service_token, api_version=API_VERSION)
-        domain_info = self._api.utils.resolveScreenName(screen_name=domain)
-        self._owner_id = domain_info['object_id']
-        if domain_info['type'] == 'group':
-            self._owner_id *= -1
+    def __init__(self, domain):
+        try:
+            self._api = vk.create_api(service_token=service_token, api_version=api_version)
+            domain_info = self._api.utils.resolveScreenName(screen_name=domain)
+            self._owner_id = domain_info['object_id']
+            if domain_info['type'] == 'group':
+                self._owner_id *= -1
+        except Exception as e:
+            print(e, file=sys.stderr)
+            sys.exit(1)
         
         
     def _download(self, offset, count):
-        response = self._api.wall.get(owner_id=self._owner_id, offset=offset, count=count)
         posts = []
-        for post in response['items']:
-            id = post['id']
-            date = post['date']
-            likes = post['likes']['count']
-            reposts = post['reposts']['count']
-            views = post['views']['count'] if 'views' in post else -1
-            posts.append(WallPost(id, date, likes, reposts, views))
+        try:
+            response = self._api.wall.get(owner_id=self._owner_id, offset=offset, count=count)
+            for post in response['items']:
+                id = post['id']
+                date = post['date']
+                likes = post['likes']['count']
+                reposts = post['reposts']['count']
+                views = post['views']['count'] if 'views' in post else -1
+                posts.append(WallPost(id, date, likes, reposts, views))
+        except Exception as e:
+            print(e, file=sys.stderr)
+            
         return posts
             
             
     def download_all(self):
-        offset, count = 0, 100
-        sleeping_time = 1/3
+        offset = 0
         while True:
-            posts = self._download(offset, count)
-            previous = time()
+            posts = self._download(offset, posts_count)
             if len(posts) == 0:
                 break
             for post in posts:
                 yield post
-            offset += count
-            delta = sleeping_time - (time() - previous)
-            if delta > 0:
-                sleep(delta)
+            offset += len(posts)
              
              
     def update(self, timedelta):
