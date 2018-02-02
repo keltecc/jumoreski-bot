@@ -8,14 +8,14 @@ class MessageProcessor():
 
     def __init__(self):
         self._jumoreska_pattern = re.compile('^юм[0оа]рес([ао0][ч4])?ка(\s+за\s+(\d+))?$')
-        self._top_pattern = re.compile('^топ\s+(\d+)\s+по\s+(лайкам|рейтингу)$')
+        self._top_pattern = re.compile('^топ\s+(\d+)\s+по\s+(\w+)$')
         self._wall_post_mask = 'wall-92876084_%d'
         self._help = '\n'.join([
             'инструкция - написать это сообщение',
             'юмореска - прислать случайную (рандомную) юмореску',
             'юмореска за X - прислать юмореску, у которой не меньше X лайков',
             'топ X по лайкам - показать первые X юморесок, у которых больше всего лайков',
-            'топ X по рейтингу - показать первые X юморесок с самым большим рейтингом (beta)',
+            'топ X по рейтингу - показать первые X юморесок с самым большим рейтингом',
             '',
             'P.S. Формула рейтинга: rating = (likes/views + 0.5*reposts/likes) * 100'
         ])
@@ -46,7 +46,7 @@ class MessageProcessor():
         
         
     def _build_top(self, top, limit, header, title):
-        text = [header % limit]
+        text = [header % limit, '\n']
         number = 1
         for id, value in top[:limit]:
             text.append(title % (number, value))
@@ -61,7 +61,7 @@ class MessageProcessor():
             self._likes_top, 
             limit, 
             'Первые %d по лайкам:', 
-            '%d: лайки = %d'
+            '%d. Лайки = %d'
         )
         
         
@@ -70,7 +70,7 @@ class MessageProcessor():
             self._rating_top, 
             limit, 
             'Первые %d по рейтингу:', 
-            '%d: рейтинг = %.4f'
+            '%d. Рейтинг = %.4f'
         )
         
         
@@ -92,7 +92,7 @@ class MessageProcessor():
         if match_top:
             count, type_ = int(match_top.group(1)), match_top.group(2)
             if not 0 < count <= max_top_size:
-                return {'message': 'Я могу показать не больше %d.' % max_top_size}
+                return {'message': 'Я не могу показать больше %d юморесок.' % max_top_size}
             if type_ == 'рейтингу':
                 return self._get_rating_top(count)
             if type_ == 'лайкам':
