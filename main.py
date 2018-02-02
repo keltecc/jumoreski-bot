@@ -35,6 +35,7 @@ def main():
         if (time() - previous) / 60 > update_period:
             verbose_update(False, args.verbose)
             bot.update()
+            previous = time()
         
         
 if __name__ == '__main__':
