@@ -19,7 +19,7 @@ class WallPost():
         if views > 0:
             self.rating += likes / views
         if likes > 0:
-            self.rating += reposts / likes
+            self.rating += 0.5 * reposts / likes
         self.rating *= 100
         
         

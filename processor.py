@@ -17,7 +17,7 @@ class MessageProcessor():
             'топ X по лайкам - показать первые X юморесок, у которых больше всего лайков',
             'топ X по рейтингу - показать первые X юморесок с самым большим рейтингом (beta)',
             '',
-            'P.S. Формула рейтинга: rating = (likes/views + reposts/likes) * 100'
+            'P.S. Формула рейтинга: rating = (likes/views + 0.5*reposts/likes) * 100'
         ])
         self._recalculate()
         
@@ -52,6 +52,7 @@ class MessageProcessor():
             text.append(title % (number, value))
             text.append('https://vk.com/' + self._wall_post_mask % id)
             text.append('')
+            number += 1
         return {'message': '\n'.join(text)}
         
         
