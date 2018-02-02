@@ -15,10 +15,12 @@ class WallPost():
         self.likes = likes
         self.reposts = reposts
         self.views = views
-        if views > 0 and likes > 0:
-            self.rating = (likes / views + reposts / likes) * 100
-        else:
-            self.rating = -1
+        self.rating = 0
+        if views > 0:
+            self.rating += likes / views
+        if likes > 0:
+            self.rating += reposts / likes
+        self.rating *= 100
         
         
     def combine(self):

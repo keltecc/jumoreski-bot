@@ -1,7 +1,7 @@
 import sys
 import sqlite3
 from downloader import WallDownloader
-from config import db, table, domain, update_range
+from config import db, table, domain, update_range, min_rating
 
 
 def _create_table(cursor):
@@ -22,6 +22,8 @@ def _update_posts(cursor, posts, verbose=False):
             'VALUES (?, ?, ?, ?, ?, ?)' % table
     count = 0
     for post in posts:
+        if post.rating < min_rating:
+            continue
         cursor.execute(query, post.combine())
         count += 1
         if verbose:

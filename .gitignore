@@ -2,3 +2,4 @@
 /tokens.py
 /db.sqlite
 /.gitattributes
+/*.log
