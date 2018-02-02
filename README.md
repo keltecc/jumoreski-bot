@@ -1,0 +1,3 @@
+# jumoreski
+
+Jumoreski bot.
