@@ -87,7 +87,7 @@ class MessageProcessor():
         match_jumoreska = self._jumoreska_pattern.match(text)
         match_top = self._top_pattern.match(text)
         if match_jumoreska:
-            likes = int(match_jumoreska.group(3)) or 0
+            likes = int(match_jumoreska.group(3) or 0)
             return self._get_jumoreska(likes)
         if match_top:
             count, type_ = int(match_top.group(1)), match_top.group(2)
