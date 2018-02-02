@@ -1,3 +1,3 @@
-# jumoreski
+# Jumoreski chat bot.
 
-Jumoreski bot.
+Under construction.

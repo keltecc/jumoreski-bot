@@ -24,7 +24,7 @@ class Bot():
         except Exception as e:
             print(e, file=sys.stderr)
             sys.exit(1)
-        self._processor = MessageProcessor(self._api)
+        self._processor = MessageProcessor()
         
     
     def answer(self):
@@ -34,8 +34,9 @@ class Bot():
                 info = dialog['message']
                 message = Message(info['id'], info['body'], info['user_id'])
                 self._api.messages.markAsRead(message_ids=message.id, peer_id=message.user_id)
-                kwargs_ = self._processor.process(message.text)
-                self._api.messages.send(peer_id=message.user_id, **kwargs_)
+                if message.text != '':
+                    kwargs_ = self._processor.process(message.text)
+                    self._api.messages.send(peer_id=message.user_id, **kwargs_)
         except Exception as e:
             print(e, file=sys.stderr)
             

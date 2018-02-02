@@ -46,4 +46,3 @@ def make_update(all, verbose=False):
     
 if __name__ == '__main__':
     make_update('-a' in sys.argv, True)
-    
