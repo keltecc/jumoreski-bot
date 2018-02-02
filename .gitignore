@@ -1,5 +1,6 @@
 /__pycache__/
 /tokens.py
 /db.sqlite
+/db.sqlite-journal
 /.gitattributes
 /*.log
