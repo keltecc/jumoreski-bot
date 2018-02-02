@@ -50,7 +50,7 @@ class MessageProcessor():
         number = 1
         for id, value in top[:limit]:
             text.append(title % (number, value))
-            text.append('https://vk.com/' + self._post_mask % id)
+            text.append('https://vk.com/' + self._wall_post_mask % id)
             text.append('')
         return {'message': '\n'.join(text)}
         
@@ -78,7 +78,7 @@ class MessageProcessor():
             'SELECT id FROM %s WHERE likes >= %d ORDER BY RANDOM() LIMIT 1' % (table, likes)
         )
         if len(id) > 0:
-            return {'attachment': self._post_mask % id[0][0]}
+            return {'attachment': self._wall_post_mask % id[0][0]}
         return {'message': 'Нет такой юморески.'}
         
         
