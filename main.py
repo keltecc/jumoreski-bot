@@ -34,6 +34,7 @@ def main():
         sleep(bot_timeout)
         if (time() - previous) / 60 > update_period:
             verbose_update(False, args.verbose)
+            bot.update()
         
         
 if __name__ == '__main__':

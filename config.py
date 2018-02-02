@@ -30,3 +30,6 @@ min_rating = 1.5
 
 # Wall update period (minutes)
 update_period = 5
+
+# Max size of top
+max_top_size = 50

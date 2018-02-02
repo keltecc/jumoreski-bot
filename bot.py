@@ -47,3 +47,9 @@ class Bot():
                         print('%s ANSWERED TO USER %d' % (datetime.now(), message.user_id))
         except Exception as e:
             print(e, file=sys.stderr)
+            
+            
+    def update(self):
+        self._processor.update()
+        if self._verbose:
+            print('%s BOT UPDATED' % datetime.now())
